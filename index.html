@@ -49,7 +49,7 @@
       import Stats from "https://unpkg.com/three@0.133.0/examples/jsm/libs/stats.module.js";
 
       let camera, scene, renderer;
-      let mesh;
+      let mesh, mesh2;
       let pane;
       let stats;
 
@@ -130,8 +130,18 @@
         });
 
         mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(0, 0, -0.5);
+        mesh.position.set(0.2, 0, -0.5);
         scene.add(mesh);
+
+        //Add a second shape, a torus
+        const geometry2 = new THREE.TorusGeometry(0.15,0.05, 12, 50);
+        const material2 = new THREE.MeshBasicMaterial({
+          color: new THREE.Color("rgb(235,253,150)")
+        });
+
+        mesh2 = new THREE.Mesh(geometry2, material2);
+        mesh2.position.set(-0.2, 0, -1);
+        scene.add(mesh2);
 
         pane.on('change' ,(ev) => {
           const type = ev.presetKey;

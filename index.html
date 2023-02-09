@@ -11,8 +11,7 @@
 
     <script src="https://unpkg.com/three@0.133.0/build/three.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/tweakpane@3.1.4/dist/tweakpane.min.js"></script>
-    <script src="https://unpkg.com/three@0.133.0/examples/js/loaders/GLTFLoader.js"></script>
-
+    
     <style>
       .gui-button {
         right: 20px;
@@ -36,15 +35,14 @@
   </head>
 
   <body>
-    <button id="color-change-button" class="gui-button">
-      Color
-    </button>
+    <button id="color-change-button" class="gui-button"> Color </button>
     <script type="module"> 
       import { ARButton } from "https://unpkg.com/three@0.133.0/examples/jsm/webxr/ARButton.js";
       import Stats from "https://unpkg.com/three@0.133.0/examples/jsm/libs/stats.module.js";
 
       let camera, scene, renderer;
-      let loader;
+      let loader, mesh;
+      let controller;
       let pane;
       let stats;
 
@@ -115,31 +113,9 @@
         light.position.set(0.5, 1, 0.25);
         scene.add(light);
 
-        const modelUrl = 'https://raw.githubusercontent.com/immersive-web/webxr-samples/main/media/gltf/space/space.gltf';
-
-        //loader object - GLTF loader object
-        loader = new THREE.GLTFLoader();
-        console.log(loader);
-
-        // loader(model url, onLoad callback, onProgress callback, onError callback)
-        loader.load(
-          modelUrl,
-
-          function (gltf) {
-            const model = gltf.scene;
-            console.log(model);
-            model.position.y = 2;
-            scene.add(model);
-          },
-
-          function (event) {
-            console.log(event);
-          },
-
-          function (error) {
-            console.log(error);
-          }
-        );
+        controller = renderer.xr.getController(0);
+        controller.addEventListener('select', onSelect);
+        scene.add(controller);
 
 
         pane.on('change' ,(ev) => {
@@ -187,6 +163,28 @@
         })
         window.addEventListener("resize", onWindowResize, false);
       }
+
+      function onSelect() {
+        const geometry = new THREE.ConeGeometry( 0.1, 0.2, 32 ).rotateX(Math.PI / 2);
+        const material = new THREE.MeshPhongMaterial({
+          color      :  0xffffff * Math.random(),
+          shininess  :  6,
+          flatShading:  true,
+          transparent: 1,
+          opacity    : 0.8
+        })
+
+        mesh = new THREE.Mesh(geometry, material);
+
+        mesh.position.set( 0, 0, - 0.6 ).applyMatrix4( controller.matrixWorld );
+        mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
+
+        scene.add(mesh);
+
+        console.log("selected");
+      }
+
+
 
       function onWindowResize() {
         camera.aspect = window.innerWidth / window.innerHeight;

@@ -1,0 +1,34 @@
+//2. How to add glTF 3D model
+/*       const modelUrl = 'https://raw.githubusercontent.com/HenrySu1208/CityScope-AR-test/main/Asset/pin_test.gltf';
+
+        //loader object - GLTF loader object
+        loader = new THREE.GLTFLoader();
+        console.log(loader);
+
+        // loader(model url, onLoad callback, onProgress callback, onError callback)
+        loader.load(
+          modelUrl,
+
+          function (gltf) {
+            scene.add(gltf.scene);
+            console.log("model added to the scene!");
+
+            gltf.scene.scale.multiplyScalar(0.005);
+            gltf.scene.position.z = -0.5;
+            gltf.scene.position.y = -0.1;
+          },
+
+          function (event) {
+            console.log(event);
+          },
+
+          function (error) {
+            console.log(error);
+          }
+        );
+*/
+
+//3
+/*
+
+*/

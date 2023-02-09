@@ -176,7 +176,7 @@
 
         mesh = new THREE.Mesh(geometry, material);
 
-        mesh.position.set( 0, 0, - 0.6 ).applyMatrix4( controller.matrixWorld );
+        mesh.position.set( 0, 0, 0 ).applyMatrix4( controller.matrixWorld );
         mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
 
         scene.add(mesh);

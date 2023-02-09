@@ -9,14 +9,9 @@
     />
     <link type="text/css" rel="stylesheet" href="style.css" />
 
-    <script
-      src="https://unpkg.com/three@0.133.0/build/three.js"
-      crossorigin="anonymous"
-    ></script>
-
-    <script 
-      src="https://cdn.jsdelivr.net/npm/tweakpane@3.1.4/dist/tweakpane.min.js"
-      ></script>
+    <script src="https://unpkg.com/three@0.133.0/build/three.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tweakpane@3.1.4/dist/tweakpane.min.js"></script>
+    <script src="https://unpkg.com/three@0.133.0/examples/js/loaders/GLTFLoader.js"></script>
 
     <style>
       .gui-button {
@@ -49,7 +44,7 @@
       import Stats from "https://unpkg.com/three@0.133.0/examples/jsm/libs/stats.module.js";
 
       let camera, scene, renderer;
-      let mesh, mesh2;
+      let loader;
       let pane;
       let stats;
 
@@ -120,28 +115,32 @@
         light.position.set(0.5, 1, 0.25);
         scene.add(light);
 
-        const geometry = new THREE.IcosahedronGeometry(0.1, 1);
-        const material = new THREE.MeshPhongMaterial({
-          color: new THREE.Color("rgb(226,35,213)"),
-          shininess: 6,
-          flatShading: true,
-          transparent: 1,
-          opacity: 0.8
-        });
+        const modelUrl = 'https://raw.githubusercontent.com/immersive-web/webxr-samples/main/media/gltf/space/space.gltf';
 
-        mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(0.2, 0, -0.5);
-        scene.add(mesh);
+        //loader object - GLTF loader object
+        loader = new THREE.GLTFLoader();
+        console.log(loader);
 
-        //Add a second shape, a torus
-        const geometry2 = new THREE.TorusGeometry(0.15,0.05, 12, 50);
-        const material2 = new THREE.MeshBasicMaterial({
-          color: new THREE.Color("rgb(235,253,150)")
-        });
+        // loader(model url, onLoad callback, onProgress callback, onError callback)
+        loader.load(
+          modelUrl,
 
-        mesh2 = new THREE.Mesh(geometry2, material2);
-        mesh2.position.set(-0.2, 0, -1);
-        scene.add(mesh2);
+          function (gltf) {
+            const model = gltf.scene;
+            console.log(model);
+            model.position.y = 2;
+            scene.add(model);
+          },
+
+          function (event) {
+            console.log(event);
+          },
+
+          function (error) {
+            console.log(error);
+          }
+        );
+
 
         pane.on('change' ,(ev) => {
           const type = ev.presetKey;
